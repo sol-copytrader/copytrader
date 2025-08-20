@@ -139,22 +139,32 @@
             background: color-mix(in oklab, var(--panel) 88%, transparent); margin-top: 10px; }
     .pill { font-variant-numeric: tabular-nums; font-weight: 700; }
 
-    /* Screenshot on the right */
-    .screenshot-col { align-self: center; }
+    /* Add perspective to the column so 3D transforms look natural */
+    .screenshot-col{
+      align-self: center;
+      perspective: 1200px;
+      perspective-origin: 60% 40%;
+    }
+
+    /* Tilt the whole framed image (border + glow + picture) to the LEFT */
     .screenshot-wrap{
       position: relative;
-      margin-left: -90px; /* overlap under the hero card so it peeks out */
-      transform: translateY(10px); /* subtle vertical offset */
-      padding: 10px; /* this becomes the visible border */
+      margin-left: -90px;           /* keeps the peek under the snapshot card */
+      padding: 10px;                /* visible border */
       border-radius: 20px;
-      background: #14F195; /* the border color */
+      background: #14F195;          /* border color */
       box-shadow:
         0 0 0 2px #14F195,
-        0 0 36px rgba(20,241,149,.45); /* outside glow */
-      z-index: 1; /* behind hero card */
+        0 0 36px rgba(20,241,149,.45);  /* outside glow */
+      z-index: 1;
       width: clamp(220px, 26vw, 360px);
+
+      /* 3D left tilt */
+      transform-style: preserve-3d;
+      transform: translateY(10px) rotateY(-14deg) rotateX(2deg);
     }
-    /* inward (into-the-image) glow */
+
+    /* inward (into-the-image) glow stays the same */
     .screenshot-wrap::before{
       content:"";
       position:absolute;
@@ -163,16 +173,23 @@
       box-shadow: inset 0 0 42px rgba(20,241,149,.35);
       pointer-events:none;
     }
+
+    /* The image itself no longer needs its own skew/tilt */
     .screenshot{
       display:block;
       width: 100%;
       height: auto;
       border-radius: 14px;
-      /* Slight tilt without rotation: skew + perspective */
-      transform: perspective(900px) skewY(-3deg);
-      will-change: transform;
+      transform: none; /* <-- remove any previous skew/tilt here */
       filter: drop-shadow(0 12px 24px rgba(0,0,0,.35));
     }
+
+    /* Responsive: flatten on small screens for readability */
+    @media (max-width: 920px){
+      .screenshot-col{ perspective: none; }
+      .screenshot-wrap{ transform: none; margin: 0 auto; width: min(420px, 86vw); }
+    }
+
 
     /* Sections */
     section { padding: 52px 0; }
