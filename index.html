@@ -303,6 +303,49 @@
       .hero .container { transform: none; } /* keep centered on small screens */
       .hero-grid { row-gap: 18px; }         /* comfortable vertical spacing */
     }
+
+    /* ===== Hero: equal columns, no overlap ===== */
+    @media (min-width: 921px){
+      /* keep the hero a bit wider if you like */
+      .hero .container {
+        width: min(1320px, 96vw);
+        transform: translateX(-16px);
+      }
+
+      .hero-grid{
+        /* three equal columns with consistent gaps */
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        column-gap: 40px;
+        row-gap: 32px;
+        align-items: start; /* keep tops aligned */
+      }
+
+      /* no layering tricks needed anymore */
+      .hero-card{ z-index: auto; }
+
+      /* 3D tilt context */
+      .screenshot-col{
+        align-self: start;
+        perspective: 1200px;
+        perspective-origin: 60% 40%;
+      }
+
+      /* remove the previous overlap & keep the left tilt */
+      .screenshot-wrap{
+        margin-left: 0 !important;   /* kill old negative margin */
+        z-index: auto !important;    /* no stacking above/below */
+        width: clamp(280px, 30vw, 440px);
+        transform-style: preserve-3d;
+        transform: translateY(10px) rotateY(-14deg) rotateX(2deg);
+      }
+    }
+
+    /* keep mobile tidy — stack as before */
+    @media (max-width: 920px){
+      .hero-grid { grid-template-columns: 1fr; row-gap: 18px; }
+      .screenshot-col{ perspective: none; }
+      .screenshot-wrap{ transform: none; margin: 0 auto; width: min(420px, 86vw); }
+    }
   </style>
 </head>
 <body>
