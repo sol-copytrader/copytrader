@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SOL CopyTrader — Mirror elite wallets on Solana</title>
+  <meta name="description" content="Copytrade SOL-based tokens with priority fees, private routing, and MEV/rug protection. Non-custodial, simple pricing: 1% per successful trade." />
+  <meta property="og:title" content="SOL CopyTrader" />
+  <meta property="og:description" content="Copytrade SOL-based tokens with priority fees, private routing, and MEV/rug protection." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#0ea5e9" />
+
+  <style>
+    :root{
+      --bg: #0b0d12;
+      --panel: #0f131b;
+      --muted: #9aa4b2;
+      --text: #e6edf5;
+      --primary: #0ea5e9; /* cyan-ish */
+      --accent: #22c55e;  /* green */
+      --danger: #ef4444;
+      --ring: rgba(14,165,233,.35);
+      --shadow: 0 10px 25px rgba(0,0,0,.35);
+      --radius: 14px;
+      --grad: radial-gradient(1200px 600px at 10% -10%, rgba(14,165,233,.25), transparent 60%),
+              radial-gradient(1000px 500px at 110% 10%, rgba(34,197,94,.18), transparent 60%);
+    }
+    @media (prefers-color-scheme: light) {
+      :root{
+        --bg: #f7f9fc;
+        --panel: #ffffff;
+        --muted: #5b6876;
+        --text: #0b1220;
+        --ring: rgba(14,165,233,.25);
+        --shadow: 0 10px 25px rgba(0,0,0,.08);
+        --grad: radial-gradient(1200px 600px at 10% -10%, rgba(14,165,233,.20), transparent 60%),
+                radial-gradient(1000px 500px at 110% 10%, rgba(34,197,94,.12), transparent 60%);
+      }
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      letter-spacing: .01em;
+      background-image: var(--grad);
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+
+    /* Layout */
+    .container { width: min(1120px, 92vw); margin: 0 auto; }
+    header {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: saturate(1.2) blur(10px);
+      background: color-mix(in oklab, var(--bg) 65%, transparent);
+      border-bottom: 1px solid color-mix(in oklab, var(--panel) 70%, transparent);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; }
+    .logo {
+      width: 34px; height: 34px; border-radius: 10px;
+      background: conic-gradient(from 200deg, var(--primary), var(--accent), var(--primary));
+      box-shadow: inset 0 0 10px rgba(255,255,255,.25), var(--shadow);
+    }
+    .brand span { font-weight: 700; letter-spacing: .02em; font-size: 1.05rem; }
+    .nav a { color: var(--muted); text-decoration: none; padding: 8px 10px; border-radius: 8px; }
+    .nav a:hover { color: var(--text); background: color-mix(in oklab, var(--panel) 85%, transparent); }
+
+    /* Buttons */
+    .btn {
+      appearance: none; border: 0; cursor: pointer;
+      padding: 12px 16px; border-radius: 12px; font-weight: 600;
+      color: #0b1220; background: var(--primary);
+      box-shadow: 0 8px 20px rgba(14,165,233,.35), inset 0 -2px 0 rgba(0,0,0,.15);
+      transition: transform .05s ease, filter .15s ease, box-shadow .15s ease;
+    }
+    .btn:hover { filter: brightness(1.05); }
+    .btn:active { transform: translateY(1px); }
+    .btn.secondary { background: color-mix(in oklab, var(--panel) 90%, transparent); color: var(--text); box-shadow: var(--shadow); }
+    .btn.ghost { background: transparent; color: var(--text); border: 1px solid color-mix(in oklab, var(--muted) 30%, transparent); }
+    .btn.small { padding: 10px 12px; font-weight: 600; border-radius: 10px; }
+
+    /* Hero */
+    .hero { padding: 72px 0 36px; }
+    .hero-grid {
+      display: grid; grid-template-columns: 1.1fr .9fr; gap: 28px; align-items: center;
+    }
+    .badge {
+      display:inline-flex; align-items:center; gap:8px;
+      border: 1px solid color-mix(in oklab, var(--primary) 40%, transparent);
+      color: var(--primary); padding: 6px 10px; border-radius: 999px;
+      background: color-mix(in oklab, var(--panel) 85%, transparent);
+      font-weight: 600; font-size: .9rem;
+    }
+    h1 { margin: 14px 0 10px; font-size: clamp(2rem, 4.5vw, 3.25rem); line-height: 1.1; letter-spacing: .005em; }
+    .lead { color: var(--muted); font-size: clamp(1rem, 2.6vw, 1.18rem); margin: 12px 0 26px; }
+    .cta { display:flex; gap:12px; flex-wrap: wrap; align-items: center; }
+    .hero-card {
+      background: linear-gradient(180deg, color-mix(in oklab, var(--panel) 90%, transparent), transparent 120%),
+                  color-mix(in oklab, var(--panel) 80%, transparent);
+      border: 1px solid color-mix(in oklab, var(--muted) 18%, transparent);
+      border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow);
+    }
+    .stat { display:flex; align-items:center; justify-content: space-between; padding: 12px 14px; border-radius: 12px;
+            background: color-mix(in oklab, var(--panel) 88%, transparent); margin-top: 10px; }
+    .pill { font-variant-numeric: tabular-nums; font-weight: 700; }
+
+    /* Sections */
+    section { padding: 52px 0; }
+    .grid-3 { display:grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .card {
+      background: color-mix(in oklab, var(--panel) 80%, transparent);
+      border: 1px solid color-mix(in oklab, var(--muted) 18%, transparent);
+      border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow);
+    }
+    .card h3 { margin: 6px 0 6px; font-size: 1.05rem; }
+    .muted { color: var(--muted); }
+    .kicker { color: var(--muted); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; font-size: .78rem; }
+    .list { margin: 10px 0 0; padding-left: 18px; }
+    .list li { margin: 6px 0; }
+
+    /* Footer */
+    footer { padding: 36px 0 64px; color: var(--muted); }
+    .footer-grid { display:grid; grid-template-columns: 1fr auto; gap: 18px; align-items:center; }
+    .links { display:flex; gap: 14px; flex-wrap: wrap; justify-content: flex-end; }
+    .links a { color: var(--muted); text-decoration: none; }
+    .links a:hover { color: var(--text); }
+
+    /* Responsive */
+    @media (max-width: 920px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .grid-3 { grid-template-columns: 1fr; }
+      header .nav { padding: 10px 0; }
+    }
+
+    /* Focus ring */
+    :focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; border-radius: 10px; }
+
+    /* Small helper for address display */
+    .addr { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .notice { font-size: .92rem; padding: 10px 12px; border-radius: 12px; border: 1px dashed color-mix(in oklab, var(--muted) 30%, transparent); }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container nav" role="navigation" aria-label="Main">
+      <a class="brand" href="#top">
+        <span class="logo" aria-hidden="true"></span>
+        <span>SOL CopyTrader</span>
+      </a>
+      <nav class="hide-on-mobile">
+        <a href="#benefits">Benefits</a>
+        <a href="#how">How it works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <button id="connectBtn" class="btn small" aria-live="polite">Connect Wallet</button>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <main id="top" class="hero">
+    <div class="container hero-grid">
+      <div>
+        <span class="badge" aria-label="Non-custodial and fast">⚡ Non-custodial • <span aria-hidden="true">Sub-second routing</span></span>
+        <h1>Copy elite Solana wallets.<br />Your keys, your pace.</h1>
+        <p class="lead">
+          Mirror trades from any public SOL wallet with your own slippage, priority fee, and tip.
+          Our private routing aims to land fast and reduce MEV & rug risks — all while you stay in control.
+        </p>
+        <div class="cta">
+          <button id="heroConnect" class="btn">Link your wallet</button>
+          <a class="btn ghost" href="#benefits">See how it works</a>
+          <span id="walletState" class="muted" aria-live="polite"></span>
+        </div>
+        <div class="notice" style="margin-top:14px;">
+          Recommended starting balance: <strong>≥ 0.5 SOL</strong> to cover fees and volatility. You can start with less; we’ll simply warn you.
+        </div>
+      </div>
+      <div class="hero-card" aria-label="Live service snapshot">
+        <div class="kicker">Service snapshot</div>
+        <div class="stat"><span>Current network</span><span id="networkLabel" class="pill">mainnet-beta</span></div>
+        <div class="stat"><span>Execution route</span><span class="pill">Private relay preferred</span></div>
+        <div class="stat"><span>Platform fee</span><span class="pill">1% per successful trade</span></div>
+        <div class="stat"><span>Custody</span><span class="pill">Non-custodial</span></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Benefits -->
+  <section id="benefits">
+    <div class="container">
+      <div class="kicker">Why this bot</div>
+      <h2 style="margin:6px 0 14px;">Fast, flexible, and protective by design</h2>
+      <div class="grid-3">
+        <div class="card">
+          <h3>Copy any wallet</h3>
+          <p class="muted">Follow known whales or your own curated list. You choose the wallets, we mirror their on-chain intent.</p>
+          <ul class="list muted">
+            <li>Set per-leader copy %</li>
+            <li>Allowlist tokens & DEXes</li>
+            <li>Pause/resume anytime</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>MEV & rug defenses</h3>
+          <p class="muted">Private submissions & heuristics help reduce sandwiching and detect sketchy token settings.</p>
+          <ul class="list muted">
+            <li>Slippage & priority caps</li>
+            <li>Sell-protect triggers</li>
+            <li>Token safety checks</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Zero upfront cost</h3>
+          <p class="muted">Only pay <strong>1%</strong> on successful trades. No monthly fees, no lock-ups, no hidden spreads.</p>
+          <ul class="list muted">
+            <li>Clear receipts per trade</li>
+            <li>Non-custodial control</li>
+            <li>Instant opt-out</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section id="how">
+    <div class="container">
+      <div class="kicker">How it works</div>
+      <h2 style="margin:6px 0 14px;">Three steps to mirror trades</h2>
+      <div class="grid-3">
+        <div class="card">
+          <h3>1) Link your wallet</h3>
+          <p class="muted">Connect Phantom, Solflare, or Backpack. You approve transactions — we never take custody.</p>
+        </div>
+        <div class="card">
+          <h3>2) Choose leaders</h3>
+          <p class="muted">Add public wallet addresses to follow. Set copy size, slippage, priority fee, and tip.</p>
+        </div>
+        <div class="card">
+          <h3>3) We mirror & report</h3>
+          <p class="muted">We recreate routes and submit privately for fast inclusion. You get clear PnL & trade logs.</p>
+        </div>
+      </div>
+      <div style="margin-top:18px;" class="notice">
+        <strong>Heads-up:</strong> Fast inclusion is targeted, not guaranteed. Market conditions and validator schedules can affect timing.
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing">
+    <div class="container">
+      <div class="kicker">Pricing</div>
+      <h2 style="margin:6px 0 14px;">Simple & transparent</h2>
+      <div class="card" style="display:flex; gap:18px; align-items:center; justify-content: space-between; flex-wrap: wrap;">
+        <div>
+          <h3 style="margin:0;">1% per successful trade</h3>
+          <p class="muted" style="margin:6px 0 0;">That’s it. No setup fees, subscriptions, or hidden spreads.</p>
+        </div>
+        <button class="btn" id="pricingConnect">Connect & Get Started</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <div class="container">
+      <div class="kicker">FAQ</div>
+      <h2 style="margin:6px 0 14px;">Answers at a glance</h2>
+      <div class="grid-3">
+        <div class="card">
+          <h3>Is this non-custodial?</h3>
+          <p class="muted">Yes. You connect a wallet and authorize transactions. You can disconnect any time.</p>
+        </div>
+        <div class="card">
+          <h3>Minimum to start?</h3>
+          <p class="muted">No enforced minimum. We recommend ≥ 0.5 SOL to comfortably cover fees and volatility.</p>
+        </div>
+        <div class="card">
+          <h3>Guaranteed profits?</h3>
+          <p class="muted">No. Crypto markets are risky. Use sensible slippage/priority caps and never over-allocate.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-grid">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span class="logo" aria-hidden="true"></span>
+        <div>
+          <strong>SOL CopyTrader</strong><br />
+          <small>© <span id="year"></span> All rights reserved.</small>
+        </div>
+      </div>
+      <div class="links">
+        <a href="#" aria-disabled="true">Docs</a>
+        <a href="#" aria-disabled="true">Status</a>
+        <a href="#" aria-disabled="true">X / Twitter</a>
+        <a href="#" aria-disabled="true">Discord</a>
+        <a href="#" aria-disabled="true">Terms</a>
+        <a href="#" aria-disabled="true">Privacy</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Wallet modal -->
+  <dialog id="walletModal" style="border:none; border-radius: 16px; padding:0; max-width: 520px; width: calc(92vw); box-shadow: var(--shadow);">
+    <div class="card" style="border-radius: 16px;">
+      <div style="display:flex; align-items:center; justify-content: space-between;">
+        <h3 style="margin:0;">Connect a wallet</h3>
+        <button id="closeModal" class="btn secondary small" aria-label="Close wallet options">Close</button>
+      </div>
+      <p class="muted" style="margin:10px 0 14px;">Choose a wallet to connect. If you don’t have one installed, use an install link below.</p>
+      <div style="display:grid; gap:10px;">
+        <button class="btn" id="connectPhantom">Connect Phantom</button>
+        <button class="btn" id="connectSolflare">Connect Solflare</button>
+        <button class="btn" id="connectBackpack">Connect Backpack</button>
+      </div>
+      <div class="muted" style="margin-top:12px; font-size:.92rem;">
+        Don’t have a wallet? <a href="https://phantom.app/" target="_blank" rel="noopener">Phantom</a> •
+        <a href="https://solflare.com/" target="_blank" rel="noopener">Solflare</a> •
+        <a href="https://www.backpack.app/" target="_blank" rel="noopener">Backpack</a>
+      </div>
+    </div>
+  </dialog>
+
+  <script>
+    // --- Small helpers ---
+    const $ = (sel) => document.querySelector(sel);
+    const byId = (id) => document.getElementById(id);
+    const year = new Date().getFullYear();
+    byId('year').textContent = year.toString();
+
+    // Prefer mainnet label
+    byId('networkLabel').textContent = 'mainnet-beta';
+
+    // --- Wallet detection ---
+    const providers = {
+      phantom: () => window?.phantom?.solana || (window?.solana?.isPhantom ? window.solana : null),
+      solflare: () => window?.solflare,
+      backpack: () => window?.backpack?.solana || (window?.solana?.isBackpack ? window.solana : null)
+    };
+
+    function shorten(addr) {
+      return addr.length > 10 ? addr.slice(0,4) + '…' + addr.slice(-4) : addr;
+    }
+
+    async function connectWith(providerName){
+      try {
+        let provider = providers[providerName] && providers[providerName]();
+        if (!provider) {
+          openModal(); // guide to install
+          return;
+        }
+        const resp = await provider.connect({ onlyIfTrusted: false });
+        const pubkey = resp?.publicKey?.toString?.() || provider.publicKey?.toString?.();
+        if (pubkey) {
+          setConnected(pubkey, providerName);
+          closeModal();
+        }
+      } catch (e) {
+        console.warn('Connect error:', e);
+        alert('Connection was cancelled or failed. Try again.');
+      }
+    }
+
+    function setConnected(pubkey, providerName) {
+      const connectedTxt = `Linked ✓ • ${providerName} • <span class="addr">${shorten(pubkey)}</span>`;
+      $('#walletState').innerHTML = connectedTxt;
+      const btns = [byId('connectBtn'), byId('heroConnect'), byId('pricingConnect')].filter(Boolean);
+      btns.forEach(b => {
+        b.textContent = 'Wallet Linked';
+        b.classList.add('secondary');
+        b.disabled = true;
+        b.setAttribute('aria-label', `Wallet connected: ${pubkey}`);
+      });
+      // Persist basic state in session for the upcoming app UI
+      sessionStorage.setItem('linkedWallet', JSON.stringify({ pubkey, providerName, ts: Date.now() }));
+    }
+
+    // Load state if already connected in this tab
+    (function restore(){
+      const raw = sessionStorage.getItem('linkedWallet');
+      if (!raw) return;
+      try { const { pubkey, providerName } = JSON.parse(raw); if (pubkey) setConnected(pubkey, providerName); } catch {}
+    })();
+
+    // --- Modal helpers ---
+    const walletModal = byId('walletModal');
+    const openModal = () => walletModal.showModal();
+    const closeModal = () => walletModal.close();
+
+    byId('closeModal').addEventListener('click', closeModal);
+
+    // Button wiring
+    ['connectBtn','heroConnect','pricingConnect'].forEach(id=>{
+      const el = byId(id); if(!el) return;
+      el.addEventListener('click', () => {
+        // If any provider is already injected, try that first; otherwise open options
+        const injected = providers.phantom() || providers.solflare() || providers.backpack();
+        if (injected) {
+          // Prefer whichever is present. Phantom is most common.
+          const name = injected.isPhantom ? 'phantom'
+                     : injected.isBackpack ? 'backpack'
+                     : injected.isSolflare ? 'solflare'
+                     : 'phantom';
+          connectWith(name);
+        } else {
+          openModal();
+        }
+      });
+    });
+
+    // Modal buttons
+    byId('connectPhantom').addEventListener('click', ()=> connectWith('phantom'));
+    byId('connectSolflare').addEventListener('click', ()=> connectWith('solflare'));
+    byId('connectBackpack').addEventListener('click', ()=> connectWith('backpack'));
+
+    // Listen for account changes where supported
+    if (window?.solana) {
+      window.solana.on?.('accountChanged', (pk) => {
+        if (!pk) {
+          // Disconnected
+          sessionStorage.removeItem('linkedWallet');
+          location.reload();
+        } else {
+          setConnected(pk.toString(), window.solana.isPhantom ? 'phantom' : 'wallet');
+        }
+      });
+    }
+
+    // Optional: gentle scroll for internal links
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', e=>{
+        const id = a.getAttribute('href').slice(1);
+        const el = byId(id);
+        if (el) { e.preventDefault(); el.scrollIntoView({ behavior:'smooth', block:'start' }); }
+      });
+    });
+  </script>
+</body>
+</html>
