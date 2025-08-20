@@ -57,6 +57,7 @@
       background-image: var(--grad);
       background-repeat: no-repeat;
       background-attachment: fixed;
+      overflow-x: hidden; /* avoid horizontal scroll with overlap */
     }
 
     /* Layout */
@@ -104,8 +105,14 @@
 
     /* Hero */
     .hero { padding: 72px 0 36px; }
+    /* Nudge the whole hero a bit left to create breathing room on the right (desktop only) */
+    @media (min-width: 921px){
+      .hero .container { transform: translateX(-14px); }
+    }
     .hero-grid {
-      display: grid; grid-template-columns: 1.1fr .9fr; gap: 28px; align-items: center;
+      display: grid;
+      grid-template-columns: 1.05fr .9fr .6fr; /* add third column for the screenshot */
+      gap: 28px; align-items: center;
     }
     .badge {
       display:inline-flex; align-items:center; gap:8px;
@@ -120,6 +127,8 @@
     .lead { color: var(--muted); font-size: clamp(1rem, 2.6vw, 1.18rem); margin: 12px 0 26px; }
     .cta { display:flex; gap:12px; flex-wrap: wrap; align-items: center; }
     .hero-card {
+      position: relative;
+      z-index: 2; /* sit above the screenshot so it 'peeks' from behind */
       background:
         linear-gradient(180deg, color-mix(in oklab, var(--panel) 90%, transparent), transparent 120%),
         color-mix(in oklab, var(--panel) 80%, transparent);
@@ -129,6 +138,41 @@
     .stat { display:flex; align-items:center; justify-content: space-between; padding: 12px 14px; border-radius: 12px;
             background: color-mix(in oklab, var(--panel) 88%, transparent); margin-top: 10px; }
     .pill { font-variant-numeric: tabular-nums; font-weight: 700; }
+
+    /* Screenshot on the right */
+    .screenshot-col { align-self: center; }
+    .screenshot-wrap{
+      position: relative;
+      margin-left: -90px; /* overlap under the hero card so it peeks out */
+      transform: translateY(10px); /* subtle vertical offset */
+      padding: 10px; /* this becomes the visible border */
+      border-radius: 20px;
+      background: #14F195; /* the border color */
+      box-shadow:
+        0 0 0 2px #14F195,
+        0 0 36px rgba(20,241,149,.45); /* outside glow */
+      z-index: 1; /* behind hero card */
+      width: clamp(220px, 26vw, 360px);
+    }
+    /* inward (into-the-image) glow */
+    .screenshot-wrap::before{
+      content:"";
+      position:absolute;
+      inset: 10px;
+      border-radius: 14px;
+      box-shadow: inset 0 0 42px rgba(20,241,149,.35);
+      pointer-events:none;
+    }
+    .screenshot{
+      display:block;
+      width: 100%;
+      height: auto;
+      border-radius: 14px;
+      /* Slight tilt without rotation: skew + perspective */
+      transform: perspective(900px) skewY(-3deg);
+      will-change: transform;
+      filter: drop-shadow(0 12px 24px rgba(0,0,0,.35));
+    }
 
     /* Sections */
     section { padding: 52px 0; }
@@ -153,10 +197,26 @@
     .links a:hover { color: var(--text); }
 
     /* Responsive */
+    @media (max-width: 1100px){
+      .screenshot-wrap{ margin-left: -50px; width: clamp(200px, 30vw, 320px); }
+    }
     @media (max-width: 920px) {
-      .hero-grid { grid-template-columns: 1fr; }
-      .grid-3 { grid-template-columns: 1fr; }
+      .hero-grid { grid-template-columns: 1fr; gap: 18px; }
       header .nav { padding: 10px 0; }
+      .grid-3 { grid-template-columns: 1fr; }
+      .screenshot-col{
+        order: 3;
+        justify-self: center;
+        width: 100%;
+      }
+      .screenshot-wrap{
+        margin: 0 auto;
+        transform: none; /* simplify on small screens */
+        width: min(420px, 86vw);
+      }
+      .screenshot{
+        transform: none; /* remove tilt on mobile for readability */
+      }
     }
 
     /* Focus ring */
@@ -233,12 +293,20 @@
           Recommended starting balance: <strong>≥ 0.5 SOL</strong> to cover fees and volatility. You can start with less; we’ll simply warn you.
         </div>
       </div>
+
       <div class="hero-card" aria-label="Live service snapshot">
         <div class="kicker">Service snapshot</div>
         <div class="stat"><span>Current network</span><span id="networkLabel" class="pill">mainnet-beta</span></div>
         <div class="stat"><span>Execution route</span><span class="pill">Private relay preferred</span></div>
         <div class="stat"><span>Platform fee</span><span class="pill">1% per successful trade</span></div>
         <div class="stat"><span>Custody</span><span class="pill">Non-custodial</span></div>
+      </div>
+
+      <!-- Screenshot column (peeks from behind the snapshot card) -->
+      <div class="screenshot-col" aria-hidden="true">
+        <div class="screenshot-wrap">
+          <img class="screenshot" src="phantom.png" alt="Phantom wallet screenshot showing a trade" />
+        </div>
       </div>
     </div>
   </main>
