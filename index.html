@@ -270,6 +270,39 @@
     @media (max-width: 920px) {
       .stats-grid { grid-template-columns: 1fr; }
     }
+
+    /* ===== Hero spacing & width (desktop) ===== */
+    @media (min-width: 921px){
+      .hero { padding: 96px 0 56px; } /* more vertical breathing room */
+
+      /* make the hero wider than the rest of the site */
+      .hero .container {
+        width: min(1320px, 96vw);   /* wider than the default 1120px */
+        transform: translateX(-24px); /* nudge left a touch more */
+      }
+
+      .hero-grid {
+        column-gap: 44px;  /* more space between columns */
+        row-gap: 28px;
+        grid-template-columns: 1.1fr 0.95fr 0.7fr; /* relax column proportions */
+      }
+
+      .hero-card { padding: 22px; }        /* more air inside the snapshot card */
+      .stat { padding: 14px 16px; margin-top: 14px; }
+    }
+
+    /* element-to-element spacing inside the hero */
+    .hero h1   { margin: 18px 0 16px; }
+    .hero .lead { margin: 14px 0 28px; }
+    .hero .cta  { gap: 16px; margin-top: 6px; }
+    .hero .notice { margin-top: 20px !important; }
+
+    /* ===== Mobile/tablet tidy ===== */
+    @media (max-width: 920px){
+      .hero { padding: 64px 0 40px; }
+      .hero .container { transform: none; } /* keep centered on small screens */
+      .hero-grid { row-gap: 18px; }         /* comfortable vertical spacing */
+    }
   </style>
 </head>
 <body>
