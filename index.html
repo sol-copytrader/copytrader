@@ -8,7 +8,7 @@
   <meta property="og:title" content="SOL CopyTrader" />
   <meta property="og:description" content="Copytrade SOL-based tokens with priority fees, private routing, and MEV/rug protection." />
   <meta property="og:type" content="website" />
-  <meta name="theme-color" content="#0ea5e9" />
+  <meta name="theme-color" content="#9945FF" />
 
   <style>
     :root{
@@ -16,27 +16,35 @@
       --panel: #0f131b;
       --muted: #9aa4b2;
       --text: #e6edf5;
-      --primary: #0ea5e9; /* cyan-ish */
-      --accent: #22c55e;  /* green */
-      --danger: #ef4444;
-      --ring: rgba(14,165,233,.35);
+
+      /* Solana palette */
+      --primary: #9945FF;  /* purple */
+      --accent:  #14F195;  /* green */
+      --ring: rgba(153,69,255,.35);
+
       --shadow: 0 10px 25px rgba(0,0,0,.35);
       --radius: 14px;
-      --grad: radial-gradient(1200px 600px at 10% -10%, rgba(14,165,233,.25), transparent 60%),
-              radial-gradient(1000px 500px at 110% 10%, rgba(34,197,94,.18), transparent 60%);
+
+      /* Background flair using Solana gradient colors */
+      --grad:
+        radial-gradient(1200px 600px at 10% -10%, rgba(153,69,255,.25), transparent 60%),
+        radial-gradient(1000px 500px at 110% 10%, rgba(20,241,149,.18), transparent 60%);
     }
+
     @media (prefers-color-scheme: light) {
       :root{
         --bg: #f7f9fc;
         --panel: #ffffff;
         --muted: #5b6876;
         --text: #0b1220;
-        --ring: rgba(14,165,233,.25);
+        --ring: rgba(153,69,255,.25);
         --shadow: 0 10px 25px rgba(0,0,0,.08);
-        --grad: radial-gradient(1200px 600px at 10% -10%, rgba(14,165,233,.20), transparent 60%),
-                radial-gradient(1000px 500px at 110% 10%, rgba(34,197,94,.12), transparent 60%);
+        --grad:
+          radial-gradient(1200px 600px at 10% -10%, rgba(153,69,255,.20), transparent 60%),
+          radial-gradient(1000px 500px at 110% 10%, rgba(20,241,149,.12), transparent 60%);
       }
     }
+
     * { box-sizing: border-box; }
     html, body { height: 100%; }
     body {
@@ -74,14 +82,24 @@
     .btn {
       appearance: none; border: 0; cursor: pointer;
       padding: 12px 16px; border-radius: 12px; font-weight: 600;
-      color: #0b1220; background: var(--primary);
-      box-shadow: 0 8px 20px rgba(14,165,233,.35), inset 0 -2px 0 rgba(0,0,0,.15);
+      color: #0b1220;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      box-shadow:
+        0 8px 20px rgba(153,69,255,.35),
+        inset 0 -2px 0 rgba(0,0,0,.15);
       transition: transform .05s ease, filter .15s ease, box-shadow .15s ease;
     }
     .btn:hover { filter: brightness(1.05); }
     .btn:active { transform: translateY(1px); }
-    .btn.secondary { background: color-mix(in oklab, var(--panel) 90%, transparent); color: var(--text); box-shadow: var(--shadow); }
-    .btn.ghost { background: transparent; color: var(--text); border: 1px solid color-mix(in oklab, var(--muted) 30%, transparent); }
+    .btn.secondary {
+      background: color-mix(in oklab, var(--panel) 90%, transparent);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+    .btn.ghost {
+      background: transparent; color: var(--text);
+      border: 1px solid color-mix(in oklab, var(--muted) 30%, transparent);
+    }
     .btn.small { padding: 10px 12px; font-weight: 600; border-radius: 10px; }
 
     /* Hero */
@@ -91,17 +109,20 @@
     }
     .badge {
       display:inline-flex; align-items:center; gap:8px;
-      border: 1px solid color-mix(in oklab, var(--primary) 40%, transparent);
-      color: var(--primary); padding: 6px 10px; border-radius: 999px;
-      background: color-mix(in oklab, var(--panel) 85%, transparent);
+      border: 1px solid color-mix(in oklab, var(--primary) 45%, transparent);
+      color: var(--text);
+      padding: 6px 10px; border-radius: 999px;
+      background:
+        linear-gradient(90deg, color-mix(in oklab, var(--primary) 22%, transparent), color-mix(in oklab, var(--accent) 18%, transparent));
       font-weight: 600; font-size: .9rem;
     }
     h1 { margin: 14px 0 10px; font-size: clamp(2rem, 4.5vw, 3.25rem); line-height: 1.1; letter-spacing: .005em; }
     .lead { color: var(--muted); font-size: clamp(1rem, 2.6vw, 1.18rem); margin: 12px 0 26px; }
     .cta { display:flex; gap:12px; flex-wrap: wrap; align-items: center; }
     .hero-card {
-      background: linear-gradient(180deg, color-mix(in oklab, var(--panel) 90%, transparent), transparent 120%),
-                  color-mix(in oklab, var(--panel) 80%, transparent);
+      background:
+        linear-gradient(180deg, color-mix(in oklab, var(--panel) 90%, transparent), transparent 120%),
+        color-mix(in oklab, var(--panel) 80%, transparent);
       border: 1px solid color-mix(in oklab, var(--muted) 18%, transparent);
       border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow);
     }
@@ -113,6 +134,7 @@
     section { padding: 52px 0; }
     .grid-3 { display:grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
     .card {
+      background: #121722; /* fallback */
       background: color-mix(in oklab, var(--panel) 80%, transparent);
       border: 1px solid color-mix(in oklab, var(--muted) 18%, transparent);
       border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow);
@@ -143,12 +165,14 @@
     /* Small helper for address display */
     .addr { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
     .notice { font-size: .92rem; padding: 10px 12px; border-radius: 12px; border: 1px dashed color-mix(in oklab, var(--muted) 30%, transparent); }
+
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 18px;
     }
     .stat-tile {
+      background: #121722; /* fallback */
       background: color-mix(in oklab, var(--panel) 80%, transparent);
       border: 1px solid color-mix(in oklab, var(--muted) 18%, transparent);
       border-radius: var(--radius);
@@ -160,6 +184,10 @@
       font-size: clamp(1.6rem, 4vw, 2.2rem);
       font-weight: 800; line-height: 1.2; margin-top: 6px;
       font-variant-numeric: tabular-nums;
+      background-image: linear-gradient(90deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
     .stat-sub { margin-top: 6px; }
     @media (max-width: 920px) {
@@ -175,13 +203,13 @@
         <span class="logo" aria-hidden="true"></span>
         <span>SOL CopyTrader</span>
       </a>
-      <nav class="hide-on-mobile">
+      <nav class="hide-on-mobile" aria-label="Primary">
         <a href="#stats">Stats</a>
         <a href="#benefits">Benefits</a>
         <a href="#how">How it works</a>
         <a href="#pricing">Pricing</a>
         <a href="#faq">FAQ</a>
-      </nav>      
+      </nav>
       <button id="connectBtn" class="btn small" aria-live="polite">Connect Wallet</button>
     </div>
   </header>
@@ -199,7 +227,7 @@
         <div class="cta">
           <button id="heroConnect" class="btn">Link your wallet</button>
           <a class="btn ghost" href="#benefits">See how it works</a>
-          <span id="walletState" class="muted" aria-live="polite"></span>
+          <span id="walletState" class="muted" aria-live="polite" aria-atomic="true"></span>
         </div>
         <div class="notice" style="margin-top:14px;">
           Recommended starting balance: <strong>≥ 0.5 SOL</strong> to cover fees and volatility. You can start with less; we’ll simply warn you.
@@ -353,12 +381,12 @@
         </div>
       </div>
       <div class="links">
-        <a href="#" aria-disabled="true">Docs</a>
-        <a href="#" aria-disabled="true">Status</a>
-        <a href="#" aria-disabled="true">X / Twitter</a>
-        <a href="#" aria-disabled="true">Discord</a>
-        <a href="#" aria-disabled="true">Terms</a>
-        <a href="#" aria-disabled="true">Privacy</a>
+        <a href="#" aria-disabled="true" tabindex="-1" onclick="return false;">Docs</a>
+        <a href="#" aria-disabled="true" tabindex="-1" onclick="return false;">Status</a>
+        <a href="#" aria-disabled="true" tabindex="-1" onclick="return false;">X / Twitter</a>
+        <a href="#" aria-disabled="true" tabindex="-1" onclick="return false;">Discord</a>
+        <a href="#" aria-disabled="true" tabindex="-1" onclick="return false;">Terms</a>
+        <a href="#" aria-disabled="true" tabindex="-1" onclick="return false;">Privacy</a>
       </div>
     </div>
   </footer>
@@ -417,6 +445,7 @@
         if (pubkey) {
           setConnected(pubkey, providerName);
           closeModal();
+          attachAccountListener(provider, providerName);
         }
       } catch (e) {
         console.warn('Connect error:', e);
@@ -438,11 +467,29 @@
       sessionStorage.setItem('linkedWallet', JSON.stringify({ pubkey, providerName, ts: Date.now() }));
     }
 
+    function attachAccountListener(provider, label='wallet'){
+      provider?.on?.('accountChanged', (pk)=>{
+        if (!pk) {
+          sessionStorage.removeItem('linkedWallet');
+          location.reload();
+        } else {
+          setConnected(pk.toString(), label);
+        }
+      });
+      provider?.on?.('disconnect', ()=>{
+        sessionStorage.removeItem('linkedWallet');
+        location.reload();
+      });
+    }
+
     // Load state if already connected in this tab
     (function restore(){
       const raw = sessionStorage.getItem('linkedWallet');
       if (!raw) return;
-      try { const { pubkey, providerName } = JSON.parse(raw); if (pubkey) setConnected(pubkey, providerName); } catch {}
+      try {
+        const { pubkey, providerName } = JSON.parse(raw);
+        if (pubkey) setConnected(pubkey, providerName);
+      } catch {}
     })();
 
     // --- Modal helpers ---
@@ -452,6 +499,10 @@
 
     byId('closeModal').addEventListener('click', closeModal);
 
+    // Trap focus/backdrop/Esc for nicer UX
+    walletModal.addEventListener('cancel', (e)=>{ e.preventDefault(); closeModal(); });
+    walletModal.addEventListener('click', (e)=>{ if (e.target === walletModal) closeModal(); });
+
     // Button wiring
     ['connectBtn','heroConnect','pricingConnect'].forEach(id=>{
       const el = byId(id); if(!el) return;
@@ -459,7 +510,6 @@
         // If any provider is already injected, try that first; otherwise open options
         const injected = providers.phantom() || providers.solflare() || providers.backpack();
         if (injected) {
-          // Prefer whichever is present. Phantom is most common.
           const name = injected.isPhantom ? 'phantom'
                      : injected.isBackpack ? 'backpack'
                      : injected.isSolflare ? 'solflare'
@@ -476,11 +526,10 @@
     byId('connectSolflare').addEventListener('click', ()=> connectWith('solflare'));
     byId('connectBackpack').addEventListener('click', ()=> connectWith('backpack'));
 
-    // Listen for account changes where supported
+    // Listen for account changes (legacy global if present)
     if (window?.solana) {
       window.solana.on?.('accountChanged', (pk) => {
         if (!pk) {
-          // Disconnected
           sessionStorage.removeItem('linkedWallet');
           location.reload();
         } else {
@@ -489,14 +538,16 @@
       });
     }
 
-    // Optional: gentle scroll for internal links
+    // Optional: gentle scroll for internal links (respect reduced motion)
+    const prefersReduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
     document.querySelectorAll('a[href^="#"]').forEach(a=>{
       a.addEventListener('click', e=>{
         const id = a.getAttribute('href').slice(1);
         const el = byId(id);
-        if (el) { e.preventDefault(); el.scrollIntoView({ behavior:'smooth', block:'start' }); }
+        if (el) { e.preventDefault(); el.scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth', block:'start' }); }
       });
     });
+
     // --- Count-up animation for stats ---
     (function initCounters(){
       const counters = document.querySelectorAll('.count');
@@ -527,7 +578,7 @@
           const eased = 1 - Math.pow(1 - p, 3);
           const val = Math.round(eased * target);
           el.textContent = format(val, fmt);
-          if (p < 1) requestAnimationFrame(frame);
+          if (p < 1 && !document.hidden) requestAnimationFrame(frame);
         }
         requestAnimationFrame(frame);
       }
