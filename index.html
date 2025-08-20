@@ -143,6 +143,28 @@
     /* Small helper for address display */
     .addr { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
     .notice { font-size: .92rem; padding: 10px 12px; border-radius: 12px; border: 1px dashed color-mix(in oklab, var(--muted) 30%, transparent); }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .stat-tile {
+      background: color-mix(in oklab, var(--panel) 80%, transparent);
+      border: 1px solid color-mix(in oklab, var(--muted) 18%, transparent);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+    .stat-label { color: var(--muted); font-weight: 600; letter-spacing: .02em; }
+    .stat-value {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 800; line-height: 1.2; margin-top: 6px;
+      font-variant-numeric: tabular-nums;
+    }
+    .stat-sub { margin-top: 6px; }
+    @media (max-width: 920px) {
+      .stats-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -154,11 +176,12 @@
         <span>SOL CopyTrader</span>
       </a>
       <nav class="hide-on-mobile">
+        <a href="#stats">Stats</a>
         <a href="#benefits">Benefits</a>
         <a href="#how">How it works</a>
         <a href="#pricing">Pricing</a>
         <a href="#faq">FAQ</a>
-      </nav>
+      </nav>      
       <button id="connectBtn" class="btn small" aria-live="polite">Connect Wallet</button>
     </div>
   </header>
@@ -191,6 +214,38 @@
       </div>
     </div>
   </main>
+
+  <!-- Stats -->
+  <section id="stats" aria-labelledby="stats-heading">
+    <div class="container">
+      <div class="kicker">Live snapshot*</div>
+      <h2 id="stats-heading" style="margin:6px 0 14px;">Performance at a glance</h2>
+
+      <div class="stats-grid">
+        <div class="stat-tile">
+          <div class="stat-label">Volume traded</div>
+          <div class="stat-value">$<span class="count" data-format="usd" data-target="12400000">0</span></div>
+          <div class="stat-sub muted">USD (lifetime)</div>
+        </div>
+
+        <div class="stat-tile">
+          <div class="stat-label">Users</div>
+          <div class="stat-value"><span class="count" data-target="8214">0</span></div>
+          <div class="stat-sub muted">Active accounts</div>
+        </div>
+
+        <div class="stat-tile">
+          <div class="stat-label">Total trades</div>
+          <div class="stat-value"><span class="count" data-target="147892">0</span></div>
+          <div class="stat-sub muted">Executed on Solana</div>
+        </div>
+      </div>
+
+      <div class="muted" style="margin-top:12px; font-size:.92rem;">
+        *Stats are placeholder demo values and not financial advice.
+      </div>
+    </div>
+  </section>
 
   <!-- Benefits -->
   <section id="benefits">
@@ -446,6 +501,47 @@
         if (el) { e.preventDefault(); el.scrollIntoView({ behavior:'smooth', block:'start' }); }
       });
     });
+    // --- Count-up animation for stats ---
+    (function initCounters(){
+      const counters = document.querySelectorAll('.count');
+      if (!('IntersectionObserver' in window) || counters.length === 0) {
+        counters.forEach(c => c.textContent = format(+c.dataset.target, c.dataset.format));
+        return;
+      }
+      const seen = new WeakSet();
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(entry=>{
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            if (seen.has(el)) return;
+            seen.add(el);
+            animateCount(el, +el.dataset.target, el.dataset.format);
+            io.unobserve(el);
+          }
+        });
+      }, { threshold: 0.25 });
+
+      counters.forEach(el => io.observe(el));
+
+      function animateCount(el, target, fmt) {
+        const dur = 1000 + Math.min(1500, target/50); // ms
+        const start = performance.now();
+        function frame(now){
+          const p = Math.min(1, (now - start) / dur);
+          const eased = 1 - Math.pow(1 - p, 3);
+          const val = Math.round(eased * target);
+          el.textContent = format(val, fmt);
+          if (p < 1) requestAnimationFrame(frame);
+        }
+        requestAnimationFrame(frame);
+      }
+      function format(n, fmt) {
+        if (fmt === 'usd') {
+          return n.toLocaleString(undefined, { maximumFractionDigits: 0 });
+        }
+        return n.toLocaleString();
+      }
+    })();
   </script>
 </body>
 </html>
