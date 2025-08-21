@@ -1,0 +1,195 @@
+<!-- privacy.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Privacy Policy — SOL CopyTrader</title>
+  <meta name="description" content="Privacy Policy for SOL CopyTrader." />
+  <meta property="og:title" content="Privacy Policy — SOL CopyTrader" />
+  <meta property="og:description" content="Read how SOL CopyTrader handles your data." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#9945FF" />
+  <style>
+    :root{
+      --bg:#0b0d12; --panel:#0f131b; --muted:#9aa4b2; --text:#e6edf5;
+      --primary:#9945FF; --accent:#14F195; --ring:rgba(153,69,255,.35);
+      --shadow:0 10px 25px rgba(0,0,0,.35); --radius:14px;
+      --grad:
+        radial-gradient(1200px 600px at 10% -10%, rgba(153,69,255,.25), transparent 60%),
+        radial-gradient(1000px 500px at 110% 10%, rgba(20,241,149,.18), transparent 60%);
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f7f9fc; --panel:#fff; --muted:#5b6876; --text:#0b1220;
+        --ring:rgba(153,69,255,.25); --shadow:0 10px 25px rgba(0,0,0,.08);
+        --grad:
+          radial-gradient(1200px 600px at 10% -10%, rgba(153,69,255,.20), transparent 60%),
+          radial-gradient(1000px 500px at 110% 10%, rgba(20,241,149,.12), transparent 60%);
+      }
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial;
+      background:var(--bg); color:var(--text); line-height:1.6; letter-spacing:.01em;
+      background-image:var(--grad); background-repeat:no-repeat; background-attachment:fixed;
+    }
+    .container{width:min(1120px,92vw); margin:0 auto;}
+    header{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter:saturate(1.2) blur(10px);
+      background:color-mix(in oklab, var(--bg) 65%, transparent);
+      border-bottom:1px solid color-mix(in oklab, var(--panel) 70%, transparent);
+    }
+    .nav{display:flex; align-items:center; justify-content:space-between; padding:14px 0; gap:16px;}
+    .brand{display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit;}
+    .logo{width:34px;height:34px;border-radius:10px;background:conic-gradient(from 200deg,var(--primary),var(--accent),var(--primary));box-shadow:inset 0 0 10px rgba(255,255,255,.25),var(--shadow)}
+    .btn{appearance:none;border:0;cursor:pointer;padding:10px 14px;border-radius:10px;font-weight:600;color:#0b1220;background:linear-gradient(90deg,var(--primary),var(--accent));box-shadow:0 8px 20px rgba(153,69,255,.35), inset 0 -2px 0 rgba(0,0,0,.15)}
+
+    main{padding:64px 0 48px}
+    .page-hero{margin-bottom:18px}
+    .kicker{color:var(--muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.78rem}
+    h1{margin:8px 0 6px; font-size: clamp(2rem, 4.2vw, 2.6rem); line-height:1.15}
+    .lead{color:var(--muted);margin:8px 0 0}
+
+    .content{display:grid; grid-template-columns: 1fr; gap:18px; margin-top:18px}
+    .card{background:color-mix(in oklab, var(--panel) 80%, transparent); border:1px solid color-mix(in oklab, var(--muted) 18%, transparent); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow)}
+    h2{font-size:1.25rem;margin:0 0 8px}
+    h3{font-size:1.05rem;margin:16px 0 6px}
+    .muted{color:var(--muted)}
+    ul{margin:8px 0 0; padding-left:18px}
+    li{margin:6px 0}
+
+    footer{padding:36px 0 64px;color:var(--muted)}
+    .footer-grid{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center}
+    .links{display:flex;gap:14px;flex-wrap:wrap;justify-content:flex-end}
+    .links a{color:var(--muted);text-decoration:none}
+    .links a:hover{color:var(--text)}
+    :focus-visible{outline:2px solid var(--ring);outline-offset:2px;border-radius:10px}
+    @media (min-width: 1200px){ .container{width:min(1200px,94vw)} }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a class="brand" href="index.html">
+        <span class="logo" aria-hidden="true"></span>
+        <span>SOL CopyTrader</span>
+      </a>
+      <a class="btn" href="index.html">Back to app</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="container page-hero">
+      <div class="kicker">Legal</div>
+      <h1>Privacy Policy</h1>
+      <p class="lead">Last updated: <span id="lastUpdated">2025-01-01</span></p>
+    </div>
+
+    <div class="container content">
+      <div class="card">
+        <h2>Overview</h2>
+        <p class="muted">We aim to collect the minimum information necessary to operate a non-custodial copytrading tool. We do not control your wallet or private keys.</p>
+      </div>
+
+      <div class="card">
+        <h2>Information We Collect</h2>
+        <ul>
+          <li><strong>Wallet metadata:</strong> public wallet addresses you connect and basic configuration (leaders followed, copy % settings).</li>
+          <li><strong>Usage data:</strong> app events, device/browser info, and approximate region for performance and abuse prevention.</li>
+          <li><strong>Transaction logs:</strong> hashes/receipts needed to show PnL and fee receipts. We do not store your seed phrase or private keys.</li>
+          <li><strong>Support messages:</strong> information you provide when contacting us.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>How We Use Information</h2>
+        <ul>
+          <li>Operate and improve the Service, including routing and reliability.</li>
+          <li>Detect abuse, fraud, or security incidents.</li>
+          <li>Provide support and communicate important updates.</li>
+          <li>Generate aggregate, de-identified analytics to understand feature usage.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Cookies &amp; Analytics</h2>
+        <p>We may use cookies or local storage to remember preferences and session state. Analytics, if enabled, are used in aggregate. You can block cookies in your browser; some features may degrade.</p>
+      </div>
+
+      <div class="card">
+        <h2>Sharing</h2>
+        <p>We may share limited data with infrastructure providers (e.g., RPC, relays, analytics) strictly to operate the Service. We do not sell personal information or share for third-party advertising.</p>
+      </div>
+
+      <div class="card">
+        <h2>Data Retention</h2>
+        <p>Configuration and trade logs are retained for as long as needed to provide the Service and meet legal/accounting obligations, after which they may be deleted or de-identified.</p>
+      </div>
+
+      <div class="card">
+        <h2>Security</h2>
+        <p>We use industry-standard measures to protect stored data. However, no method is 100% secure. Protect your wallet, seed phrase, and devices.</p>
+      </div>
+
+      <div class="card">
+        <h2>Your Choices &amp; Rights</h2>
+        <ul>
+          <li>Disconnect your wallet at any time.</li>
+          <li>Request deletion of configuration data by contacting us.</li>
+          <li>Depending on your region, you may have rights of access, correction, or portability.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Children</h2>
+        <p>The Service is not intended for children under 13 (or the age required by your region). We do not knowingly collect information from children.</p>
+      </div>
+
+      <div class="card">
+        <h2>International Transfers</h2>
+        <p>Your information may be processed outside your country. Where required, we use appropriate safeguards.</p>
+      </div>
+
+      <div class="card">
+        <h2>Changes</h2>
+        <p>We may update this Policy. Changes will be posted here with a new “Last updated” date.</p>
+      </div>
+
+      <div class="card">
+        <h2>Contact</h2>
+        <p>Privacy questions? Email us at <a href="mailto:privacy@yourdomain.tld">privacy@yourdomain.tld</a>.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container footer-grid">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span class="logo" aria-hidden="true"></span>
+        <div><strong>SOL CopyTrader</strong><br /><small>© <span id="year"></span> All rights reserved.</small></div>
+      </div>
+      <div class="links">
+        <a id="linkDocs" href="#" aria-label="Documentation">Docs</a>
+        <a id="linkTwitter" href="#" aria-label="Twitter / X">X / Twitter</a>
+        <a href="terms.html">Terms</a>
+        <a href="privacy.html" aria-current="page">Privacy</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear().toString();
+    // document.getElementById('lastUpdated').textContent = '2025-08-20';
+
+    const LINKS = { docs:'', twitter:'' };
+    const d=document.getElementById('linkDocs'), t=document.getElementById('linkTwitter');
+    if(LINKS.docs){ d.href = LINKS.docs; d.target='_blank'; d.rel='noopener'; }
+    else d.addEventListener('click',e=>{e.preventDefault(); alert('TODO: set LINKS.docs to your documentation URL.');});
+    if(LINKS.twitter){ t.href = LINKS.twitter; t.target='_blank'; t.rel='noopener'; }
+    else t.addEventListener('click',e=>{e.preventDefault(); alert('TODO: set LINKS.twitter to your Twitter URL.');});
+  </script>
+</body>
+</html>

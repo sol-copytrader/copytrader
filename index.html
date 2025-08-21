@@ -541,16 +541,16 @@
           <small>© <span id="year"></span> All rights reserved.</small>
         </div>
       </div>
+  
+      <!-- Keep only these four links -->
       <div class="links">
-        <a href="#" aria-disabled="true" tabindex="-1" onclick="return false;">Docs</a>
-        <a href="#" aria-disabled="true" tabindex="-1" onclick="return false;">Status</a>
-        <a href="#" aria-disabled="true" tabindex="-1" onclick="return false;">X / Twitter</a>
-        <a href="#" aria-disabled="true" tabindex="-1" onclick="return false;">Discord</a>
-        <a href="#" aria-disabled="true" tabindex="-1" onclick="return false;">Terms</a>
-        <a href="#" aria-disabled="true" tabindex="-1" onclick="return false;">Privacy</a>
+        <a id="linkDocs" href="#" aria-label="Documentation">Docs</a>
+        <a id="linkTwitter" href="#" aria-label="Twitter / X">X / Twitter</a>
+        <a id="linkTerms" href="#" aria-label="Terms of Service">Terms</a>
+        <a id="linkPrivacy" href="#" aria-label="Privacy Policy">Privacy</a>
       </div>
     </div>
-  </footer>
+  </footer>  
 
   <!-- Wallet modal -->
   <dialog id="walletModal" style="border:none; border-radius: 16px; padding:0; max-width: 520px; width: calc(92vw); box-shadow: var(--shadow);">
@@ -751,5 +751,35 @@
       }
     })();
   </script>
+  <script>
+    // --- Footer link placeholders ---
+    const LINKS = {
+      docs:    'https://docs.maestrobots.com/copytrade', // e.g. 'https://your-domain.tld/docs'
+      twitter: 'https://x.com/SolTradingBot', // e.g. 'https://twitter.com/your_handle'
+      terms:   '/terms.html', // e.g. '/terms.html'
+      privacy: '/privacy.html'  // e.g. '/privacy.html'
+    };
+  
+    [
+      ['linkDocs','docs', true],
+      ['linkTwitter','twitter', true],
+      ['linkTerms','terms', false],
+      ['linkPrivacy','privacy', false],
+    ].forEach(([id,key,external])=>{
+      const el = document.getElementById(id);
+      const url = LINKS[key];
+  
+      if (url) {
+        el.href = url;
+        if (external) { el.target = '_blank'; el.rel = 'noopener'; }
+      } else {
+        // Prevent navigation until you set a URL
+        el.addEventListener('click', (e)=>{
+          e.preventDefault();
+          alert(`TODO: set LINKS.${key} to the real URL for “${el.textContent}”.`);
+        });
+      }
+    });
+  </script>  
 </body>
 </html>
