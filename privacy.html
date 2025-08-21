@@ -45,7 +45,16 @@
     }
     .nav{display:flex; align-items:center; justify-content:space-between; padding:14px 0; gap:16px;}
     .brand{display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit;}
-    .logo{width:34px;height:34px;border-radius:10px;background:conic-gradient(from 200deg,var(--primary),var(--accent),var(--primary));box-shadow:inset 0 0 10px rgba(255,255,255,.25),var(--shadow)}
+    .logo{
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: inline-block;
+      vertical-align: middle;
+      object-fit: contain;      /* or "cover" if you want edge-to-edge crop */
+      background: transparent;  /* kill the old gradient background */
+      box-shadow: inset 0 0 10px rgba(255,255,255,.25), var(--shadow);
+    }
     .btn{appearance:none;border:0;cursor:pointer;padding:10px 14px;border-radius:10px;font-weight:600;color:#0b1220;background:linear-gradient(90deg,var(--primary),var(--accent));box-shadow:0 8px 20px rgba(153,69,255,.35), inset 0 -2px 0 rgba(0,0,0,.15)}
 
     main{padding:64px 0 48px}

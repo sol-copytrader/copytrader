@@ -71,9 +71,14 @@
     }
     .nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; gap: 16px; }
     .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; }
-    .logo {
-      width: 34px; height: 34px; border-radius: 10px;
-      background: conic-gradient(from 200deg, var(--primary), var(--accent), var(--primary));
+    .logo{
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: inline-block;
+      vertical-align: middle;
+      object-fit: contain;      /* or "cover" if you want edge-to-edge crop */
+      background: transparent;  /* kill the old gradient background */
       box-shadow: inset 0 0 10px rgba(255,255,255,.25), var(--shadow);
     }
     .brand span { font-weight: 700; letter-spacing: .02em; font-size: 1.05rem; }
